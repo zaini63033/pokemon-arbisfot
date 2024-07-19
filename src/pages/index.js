@@ -48,12 +48,12 @@ const Home = () => {
       </InfiniteScroll>
       <style jsx>{`
         .pokemon-container {
-          display: flex; // Use flexbox layout for the container.
-          flex-wrap: wrap; // Allow items to wrap to the next line.
-          gap: 16px; // Space between items.
+          display: flex; 
+          flex-wrap: wrap; 
+          gap: 16px; 
         }
         .pokemon-item {
-          text-align: center; // Center-align the text.
+          text-align: center;
         }
       `}</style>
     </div>
