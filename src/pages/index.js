@@ -30,7 +30,6 @@ const Home = () => {
         pageStart={0} 
         loadMore={loadMore}
         hasMore={hasMore} 
-        loader={<div key={0}>Loading...</div>}
       >
         <div className="pokemon-container">
           {pokemon.map((p) => (
