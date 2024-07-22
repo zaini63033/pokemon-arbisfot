@@ -1,0 +1,9 @@
+.pokemon-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pokemon-item { 
+  text-align: center;
+}
