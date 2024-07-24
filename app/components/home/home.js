@@ -3,51 +3,51 @@ import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import Image from 'next/image';
 import { fetchPokemonData } from '../../../api/fetch-pokemon';
-import styles from "./home.module.css";
+import styles from './home.module.css';
 
-export const HomePage = () => {
+export const HomePage = ({ initialPokemonDetails }) => {
   const limit = 10;
-  const [pokemon, setPokemon] = useState([]);
+  const [pokemon, setPokemon] = useState(initialPokemonDetails);
   const [hasMore, setHasMore] = useState(true);
-  const [offset, setOffset] = useState(0);
-  const map = {};
+  const [offset, setOffset] = useState(initialPokemonDetails.length);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const loadMore = async () => {
+  const loadMore = async () => { 
+    if (isLoading) return;
 
-    if(offset in map)
-      return
+    setIsLoading(true);
 
-    map[offset] = true;
-
-    const newPokemon = await fetchPokemonData({limit, offset});
-    setPokemon((prevPokemon) => [...prevPokemon, ...newPokemon]);
-
-    setOffset(offset + limit);
+    try
+    { 
+      const newPokemon = await fetchPokemonData({ limit, offset });
+      setPokemon((prevPokemon) => [...prevPokemon, ...newPokemon]);
+      setOffset(offset + limit);
+    }
+    catch(error)
+    {
+      console.error(error);
+    }
+    setIsLoading(false);
 
     if (offset >= 100000) {
       setHasMore(false);
     }
-
   };
 
   return (
     <div>
       <h1>Pokémon List</h1>
-      <InfiniteScroll pageStart={0} loadMore={loadMore} hasMore={hasMore}>
-        <div className= {styles["pokemon-container"]}>
+      <InfiniteScroll initialLoad={false} pageStart={0} loadMore={loadMore} hasMore={hasMore}>
+        <div className={styles['pokemon-container']}>
           {pokemon.map((p) => (
-            <div key={p.id} className= {styles["pokemon-item"]}>
-              <Image
-                src={p.image}
-                alt={p.name}
-                width={100}
-                height={100}
-              />
+            <div key={p.id} className={styles['pokemon-item']}>
+              <Image src={p.back_image} alt={p.name} width={150} height={150} />
               <p>{p.name}</p>
             </div>
           ))}
         </div>
       </InfiniteScroll>
+      {isLoading && <div>Loading more Pokémon...</div>}
     </div>
   );
 };

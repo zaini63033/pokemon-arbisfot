@@ -1,9 +1,18 @@
- import { HomePage } from "./components"
- 
- export const metadata = {
+import { HomePage } from "./components";
+import { fetchPokemonData } from "../api/fetch-pokemon";
+
+export const metadata = {
   title: 'Pokemon Gallery',
-}
- 
-export default function Page() {
-  return <HomePage/>
+};
+
+export default async function Page() {
+  let initialPokemonDetails = [];
+
+  try {
+    initialPokemonDetails = await fetchPokemonData({limit:30});
+  } catch (error) {
+    console.error(error);
+  }
+
+  return <HomePage initialPokemonDetails={initialPokemonDetails} />;
 }

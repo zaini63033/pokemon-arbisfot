@@ -8,8 +8,10 @@ export const fetchPokemonData = async ({ limit = 10, offset = 0 } = {}) => {
 
     let id = offset;
 
+    const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/`;
+
     for (const pokemon of data.results) {
-      pokemonDetails.push({id, name: pokemon.name, image : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`});
+      pokemonDetails.push({...pokemon, id, front_image : `${image}${id + 1}.png`, back_image : `${image}/back/${id + 1}.png`});
       ++id;
     }
 
