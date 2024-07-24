@@ -9,7 +9,7 @@ export default async function Page() {
   let initialPokemonDetails = [];
 
   try {
-    initialPokemonDetails = await fetchPokemonData({limit:30});
+    initialPokemonDetails = await fetchPokemonData({ limit: 30 });
   } catch (error) {
     console.error(error);
   }
