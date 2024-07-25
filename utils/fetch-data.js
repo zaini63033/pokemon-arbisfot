@@ -1,12 +1,12 @@
-export const fetchData = async ({ URL, query }) => {
+export const fetchData = async ({ URL = '', queryParams = {} } = {}) => {
   try {
-    const attributes = Object.keys(query);
+    const attributes = Object.keys(queryParams);
 
     for (let i = 0; i < attributes.length; i++) {
       if (i == 0) URL += `?`;
       else URL += '&';
 
-      URL += attributes[i] + `=${query[attributes[i]]}`;
+      URL += attributes[i] + `=${queryParams[attributes[i]]}`;
     }
 
     const res = await fetch(URL);

@@ -2,11 +2,10 @@
 import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import Image from 'next/image';
-import { fetchPokemons } from '../../../api/fetch-pokemons';
+import { fetchPokemons } from '@/api/fetch-pokemons';
 import styles from './home.module.css';
 import {} from 'next/navigation';
 import Link from 'next/link';
-// import { useRouter } from 'next/navigation';
 
 export const HomePage = ({ initialPokemonDetails }) => {
   const limit = 10;
@@ -14,8 +13,6 @@ export const HomePage = ({ initialPokemonDetails }) => {
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(initialPokemonDetails.length);
   const [isLoading, setIsLoading] = useState(false);
-
-  // const router = useRouter();
 
   const loadMore = async () => {
     if (isLoading) return;
@@ -50,7 +47,6 @@ export const HomePage = ({ initialPokemonDetails }) => {
             <div key={p.id} className={styles['pokemon-item']}>
               <Link href={`/${p.name}`}>
                 <Image
-                  // onClick={() => router.push(`/${p.name}`)}
                   src={p.front_image}
                   alt={p.name}
                   width={150}

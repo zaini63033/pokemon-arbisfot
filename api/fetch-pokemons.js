@@ -1,10 +1,10 @@
-import { fetchData } from '../utils/fetch-data';
+import { fetchData } from '@/utils/fetch-data';
 
 export const fetchPokemons = async ({ limit = 10, offset = 0 } = {}) => {
   try {
     const data = await fetchData({
       URL: `https://pokeapi.co/api/v2/pokemon`,
-      query: { limit, offset },
+      queryParams: { limit, offset },
     });
 
     const pokemonDetails = [];
@@ -26,6 +26,6 @@ export const fetchPokemons = async ({ limit = 10, offset = 0 } = {}) => {
     return pokemonDetails;
   } catch (error) {
     console.error(error);
-    return [];
+    throw error;
   }
 };

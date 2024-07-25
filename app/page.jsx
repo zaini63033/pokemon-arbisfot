@@ -1,5 +1,5 @@
 import { HomePage } from './components';
-import { fetchPokemons } from '../api/fetch-pokemons';
+import { fetchPokemons } from '@/api/fetch-pokemons';
 
 export const metadata = {
   title: 'Pokemon Gallery',
