@@ -4,7 +4,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import Image from 'next/image';
 import { fetchPokemons } from '@/api/fetch-pokemons';
 import styles from './home.module.css';
-import {} from 'next/navigation';
 import Link from 'next/link';
 
 export const HomePage = ({ initialPokemonDetails }) => {
