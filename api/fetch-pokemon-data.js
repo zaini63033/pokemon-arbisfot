@@ -3,7 +3,7 @@ import { fetchData } from '@/utils/fetch-data';
 export const fetchPokemonData = async ({ name = '' } = {}) => {
   try {
     const data = await fetchData({
-      URL: `https://pokeapi.co/api/v2/pokemon/${name}`
+      URL: `https://pokeapi.co/api/v2/pokemon/${name}`,
     });
     return data;
   } catch (error) {

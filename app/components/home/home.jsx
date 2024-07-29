@@ -43,21 +43,38 @@ export const HomePage = ({ initialPokemonDetails }) => {
       >
         <div className={styles['pokemon-container']}>
           {pokemon.map((p) => (
-            <div key={p.id} className={styles['pokemon-item']}>
-              <Link href={`/${p.name}`}>
-                <Image
-                  src={p.front_image}
-                  alt={p.name}
-                  width={150}
-                  height={150}
-                />
-              </Link>
-              <p>{p.name}</p>
-            </div>
+            <PokemonItem key={p.id} pokemon={p} />
           ))}
         </div>
       </InfiniteScroll>
       {isLoading && <div>Loading more Pokémon...</div>}
+    </div>
+  );
+};
+
+const PokemonItem = ({ pokemon }) => {
+  const [isFrontImage, setIsFrontImage] = useState(true);
+
+  return (
+    <div className={styles['pokemon-item']}>
+      <Link href={`/${pokemon.name}`}>
+        <div className={styles['image-container']}>
+          <Image
+            src={isFrontImage ? pokemon.front_image : pokemon.back_image}
+            alt={pokemon.name}
+            width={150}
+            height={150}
+          />
+        </div>
+      </Link>
+      <div className={styles['details-container']}>
+        <p>ID: {pokemon.id + 1}</p>
+        <p>{pokemon.name}</p>
+      </div>
+      <div className={styles['button-container']}>
+        <button onClick={() => setIsFrontImage(true)}>Front</button>
+        <button onClick={() => setIsFrontImage(false)}>Back</button>
+      </div>
     </div>
   );
 };

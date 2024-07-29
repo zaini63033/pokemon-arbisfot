@@ -2,9 +2,11 @@ import { PokemonPage } from '@/app/components/pokemon-details/pokemon-details';
 import { fetchPokemonData } from '@/api/fetch-pokemon-data';
 import { notFound } from 'next/navigation';
 
-export const metadata = {
-  title: 'Pokemon Details',
-};
+export async function generateMetadata({ params }) {
+  return {
+    title: `${params.pokemonName}`,
+  };
+}
 
 export default async function Page({ params }) {
   const data = await fetchPokemonData({ name: params.pokemonName });
