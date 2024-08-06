@@ -1,10 +1,9 @@
 'use client';
 import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import Image from 'next/image';
 import { fetchPokemons } from '@/api/fetch-pokemons';
 import styles from './home.module.css';
-import Link from 'next/link';
+import { PokemonItem } from './pokemon-item/pokemon-item';
 
 export const HomePage = ({ initialPokemonDetails }) => {
   const limit = 10;
@@ -48,33 +47,6 @@ export const HomePage = ({ initialPokemonDetails }) => {
         </div>
       </InfiniteScroll>
       {isLoading && <div>Loading more Pokémon...</div>}
-    </div>
-  );
-};
-
-const PokemonItem = ({ pokemon }) => {
-  const [isFrontImage, setIsFrontImage] = useState(true);
-
-  return (
-    <div className={styles['pokemon-item']}>
-      <Link href={`/${pokemon.name}`}>
-        <div className={styles['image-container']}>
-          <Image
-            src={isFrontImage ? pokemon.front_image : pokemon.back_image}
-            alt={pokemon.name}
-            width={150}
-            height={150}
-          />
-        </div>
-      </Link>
-      <div className={styles['details-container']}>
-        <p>ID: {pokemon.id + 1}</p>
-        <p>{pokemon.name}</p>
-      </div>
-      <div className={styles['button-container']}>
-        <button onClick={() => setIsFrontImage(true)}>Front</button>
-        <button onClick={() => setIsFrontImage(false)}>Back</button>
-      </div>
     </div>
   );
 };

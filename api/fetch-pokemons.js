@@ -3,7 +3,7 @@ import { fetchData } from '@/utils/fetch-data';
 export const fetchPokemons = async ({ limit = 10, offset = 0 } = {}) => {
   try {
     const data = await fetchData({
-      URL: `https://pokeapi.co/api/v2/pokemon`,
+      URL: process.env.NEXT_PUBLIC_POKEMON_URL,
       queryParams: { limit, offset },
     });
 
@@ -11,7 +11,7 @@ export const fetchPokemons = async ({ limit = 10, offset = 0 } = {}) => {
 
     let id = offset;
 
-    const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/`;
+    const image = process.env.NEXT_PUBLIC_POKEMON_IMAGE;
 
     for (const pokemon of data.results) {
       pokemonDetails.push({

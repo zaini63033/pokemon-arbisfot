@@ -1,0 +1,128 @@
+/* Container to hold all content */
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.content {
+  display: flex;
+  max-width: 1200px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* Sprite buttons container */
+.spriteButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-right: 20px;
+}
+
+/* Sprite button styling */
+.spriteButton {
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.spriteButton:hover {
+  background-color: #2980b9;
+}
+
+.mainSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+}
+
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sideSection {
+  display: flex;
+  flex-direction: column;
+  width: 35%;
+}
+
+.movesSection,
+.statsSection {
+  margin-bottom: 20px;
+}
+
+.movesSection h2,
+.statsSection h2 {
+  font-size: 1.5rem;
+}
+
+.movesSection ul,
+.statsSection ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.movesSection li,
+.statsSection li {
+  margin-bottom: 10px;
+}
+
+.statsSection {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+@media (max-width: 1000px) {
+  .content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .spriteButtons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+
+  .mainSection {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .sideSection {
+    width: 100%;
+  }
+
+  .movesSection h2,
+  .statsSection h2 {
+    font-size: 1.2rem;
+  }
+
+  .spriteButton {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .movesSection ul,
+  .statsSection ul {
+    text-align: center;
+  }
+
+  .movesSection li,
+  .statsSection li {
+    margin-bottom: 5px;
+  }
+}
