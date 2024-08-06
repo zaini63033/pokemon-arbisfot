@@ -86,6 +86,10 @@ export const SearchPage = () => {
             <div className={styles.showDetails}>
               <h2>{result?.show?.name ?? result?.name ?? 'No name'}</h2>
               <p>
+                <strong>Release Date:</strong>{' '}
+                {result?.show?.premiered ?? result?.premiered}
+              </p>
+              <p>
                 <strong>Genre:</strong>{' '}
                 {result?.show?.genres?.join(', ') ?? result?.genres?.join(', ')}
               </p>
