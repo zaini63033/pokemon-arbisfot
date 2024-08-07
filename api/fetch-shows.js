@@ -1,9 +1,7 @@
 /* eslint-disable no-useless-catch */
 import { fetchData } from '@/utils/fetch-data';
 
-export const fetchInitialResults = async () => {
-  const page = 0,
-    limit = 10;
+export const fetchInitialResults = async ({ page, limit }) => {
   try {
     const data = await fetchData({
       URL: `${process.env.NEXT_PUBLIC_SHOW_DEFAULT_URL}`,
@@ -15,13 +13,13 @@ export const fetchInitialResults = async () => {
   }
 };
 
-export const fetchShows = async (searchTerm) => {
+export const fetchShows = async ({ searchTerm, limit }) => {
   try {
     const URL = `${process.env.NEXT_PUBLIC_SHOW_SEARCH_URL}`;
-    const q = searchTerm,
-      limit = 10;
-
-    const data = await fetchData({ URL, queryParams: { q, limit } });
+    const data = await fetchData({
+      URL,
+      queryParams: { q: searchTerm, limit },
+    });
     return data;
   } catch (error) {
     throw error;

@@ -18,7 +18,7 @@ export const SearchPage = () => {
       setIsLoading(true);
       setError('');
       try {
-        const data = await fetchInitialResults();
+        const data = await fetchInitialResults({ page: 0, limit: 10 });
         setInitialResults(data);
         setResults(data);
       } catch (error) {
@@ -37,7 +37,7 @@ export const SearchPage = () => {
         setIsLoading(true);
         setError('');
         try {
-          const data = await fetchShows(searchTerm);
+          const data = await fetchShows({ searchTerm, limit: 10 });
           setResults(data);
         } catch (error) {
           setError(error.message);
