@@ -31,7 +31,7 @@ export const PokemonPage = ({ pokemonData }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{`Pokémon Details - ${formatText(pokemonData?.name ?? 'Unknown')}`}</title>
+        <title>{`Pokémon Details - ${formatText(pokemonData?.name)}`}</title>
       </Head>
 
       <div className={styles.content}>
@@ -48,28 +48,25 @@ export const PokemonPage = ({ pokemonData }) => {
         </div>
 
         <div className={styles.mainSection}>
-          <h1>{formatText(pokemonData?.name ?? 'Unknown')}</h1>
+          <h1>{formatText(pokemonData?.name)}</h1>
           <div className={styles.imageSection}>
             {selectedSprite && (
               <Image
-                src={
-                  pokemonData?.sprites?.[selectedSprite] ?? '/default-image.jpg'
-                }
-                alt={pokemonData?.name ?? 'Unknown'}
+                src={pokemonData?.sprites?.[selectedSprite]}
+                alt={pokemonData?.name}
                 width={200}
                 height={200}
               />
             )}
           </div>
           <p>
-            <strong>Height:</strong> {pokemonData?.height ?? 'Unknown'}
+            <strong>Height:</strong> {pokemonData?.height}
           </p>
           <p>
-            <strong>Weight:</strong> {pokemonData?.weight ?? 'Unknown'}
+            <strong>Weight:</strong> {pokemonData?.weight}
           </p>
           <p>
-            <strong>Type:</strong>{' '}
-            {pokemonData?.types?.[0]?.type?.name ?? 'Unknown'}
+            <strong>Type:</strong> {pokemonData?.types?.[0]?.type?.name}
           </p>
         </div>
 
@@ -81,9 +78,7 @@ export const PokemonPage = ({ pokemonData }) => {
                 ?.slice(0, 10)
                 .map((move) => (
                   <li key={move?.move?.name}>
-                    {formatText(
-                      move?.move?.name.replace('-', ' ') ?? 'Unknown'
-                    )}
+                    {formatText(move?.move?.name.replace('-', ' '))}
                   </li>
                 )) ?? <li>Unknown</li>}
             </ul>
@@ -95,12 +90,9 @@ export const PokemonPage = ({ pokemonData }) => {
               {pokemonData?.stats?.slice(0, 10).map((stat) => (
                 <li key={stat?.stat?.name}>
                   <strong>
-                    {formatText(
-                      stat?.stat?.name.replace('-', ' ') ?? 'Unknown'
-                    )}
-                    :
+                    {formatText(stat?.stat?.name.replace('-', ' '))}:
                   </strong>{' '}
-                  {stat?.base_stat ?? 'Unknown'}
+                  {stat?.base_stat}
                 </li>
               )) ?? <li>Unknown</li>}
             </ul>

@@ -8,23 +8,19 @@ export const PokemonItem = ({ pokemon }) => {
 
   return (
     <div className={styles['pokemon-item']}>
-      <Link href={`/${pokemon?.name ?? 'unknown'}`}>
+      <Link href={`/${pokemon?.name}`}>
         <div className={styles['image-container']}>
           <Image
-            src={
-              isFrontImage
-                ? (pokemon?.front_image ?? '/default-front-image.jpg')
-                : (pokemon?.back_image ?? '/default-back-image.jpg')
-            }
-            alt={pokemon?.name ?? 'unknown'}
+            src={isFrontImage ? pokemon?.front_image : pokemon?.back_image}
+            alt={pokemon?.name}
             width={150}
             height={150}
           />
         </div>
       </Link>
       <div className={styles['details-container']}>
-        <p>ID: {pokemon?.id + 1 ?? 'Unknown'}</p>
-        <p>{pokemon?.name ?? 'Unknown'}</p>
+        <p>ID: {pokemon?.id + 1}</p>
+        <p>{pokemon?.name}</p>
       </div>
       <div className={styles['button-container']}>
         <button onClick={() => setIsFrontImage(true)}>Front</button>
