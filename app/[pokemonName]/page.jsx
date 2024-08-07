@@ -1,10 +1,12 @@
-import { PokemonPage } from '@/app/components/pokemon-details/pokemon-details';
+import { PokemonPage } from './components/pokemon-details';
 import { fetchPokemonData } from '@/api/fetch-pokemon-data';
 import { notFound } from 'next/navigation';
 
-export const metadata = {
-  title: 'Pokemon Details',
-};
+export async function generateMetadata({ params }) {
+  return {
+    title: `${params.pokemonName.replace(/\b\w/g, (char) => char.toUpperCase())}`,
+  };
+}
 
 export default async function Page({ params }) {
   const data = await fetchPokemonData({ name: params.pokemonName });
