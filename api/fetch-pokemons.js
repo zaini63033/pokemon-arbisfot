@@ -1,4 +1,5 @@
 import { fetchData } from '@/utils/fetch-data';
+import { POKEMON_IMAGE } from '@/utils/constants';
 
 export const fetchPokemons = async ({ limit = 10, offset = 0 } = {}) => {
   try {
@@ -11,14 +12,12 @@ export const fetchPokemons = async ({ limit = 10, offset = 0 } = {}) => {
 
     let id = offset;
 
-    const image = process.env.NEXT_PUBLIC_POKEMON_IMAGE;
-
     for (const pokemon of data.results) {
       pokemonDetails.push({
         ...pokemon,
         id,
-        front_image: `${image}${id + 1}.png`,
-        back_image: `${image}/back/${id + 1}.png`,
+        front_image: `${POKEMON_IMAGE}${id + 1}.png`,
+        back_image: `${POKEMON_IMAGE}/back/${id + 1}.png`,
       });
       ++id;
     }

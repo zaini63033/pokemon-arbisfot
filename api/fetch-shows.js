@@ -1,49 +1,24 @@
 import { fetchData } from '@/utils/fetch-data';
 
-export const fetchInitialResults = async (
-  setInitialResults,
-  setResults,
-  setIsLoading,
-  setError
-) => {
-  setIsLoading(true);
-  setError('');
+export const fetchInitialResults = async () => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SHOW_DEFAULT_URL}?page=0&limit=10`
-    );
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    setInitialResults(data);
-    setResults(data);
+    const data = await fetchData({
+      URL: `${process.env.NEXT_PUBLIC_SHOW_DEFAULT_URL}?page=0&limit=10`,
+    });
+    return data;
   } catch (error) {
-    setError('Failed to fetch data. Please try again.');
-    console.error('Error fetching data:', error);
+    console.error('Error fetching initial data:', error);
+    throw new Error('Failed to fetch initial data. Please try again.');
   }
-  setIsLoading(false);
 };
 
-export const fetchShows = async (
-  searchTerm,
-  setResults,
-  setIsLoading,
-  setError
-) => {
-  setIsLoading(true);
-  setError('');
+export const fetchShows = async (searchTerm) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_SHOW_SEARCH_URL}?q=${searchTerm}&limit=10`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    setResults(data);
+    const URL = `${process.env.NEXT_PUBLIC_SHOW_SEARCH_URL}?q=${searchTerm}&limit=10`;
+    const data = await fetchData({ URL });
+    return data;
   } catch (error) {
-    setError('Failed to fetch data. Please try again.');
-    console.error('Error fetching data:', error);
+    console.error('Error fetching shows:', error);
+    throw new Error('Failed to fetch shows. Please try again.');
   }
-  setIsLoading(false);
 };

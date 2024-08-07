@@ -8,19 +8,21 @@ import { formatText } from '@/utils/format-text';
 
 export const PokemonPage = ({ pokemonData }) => {
   const [selectedSprite, setSelectedSprite] = useState('');
-  const [nonNullSprites, setNonNullSprites] = useState([]);
+  const [sprites, setSprites] = useState([]);
 
   useEffect(() => {
-    const validSprites = Object.keys(pokemonData.sprites).filter((key) => {
-      const value = pokemonData.sprites[key];
-      return typeof value === 'string' && value.trim() !== '';
-    });
-    setNonNullSprites(validSprites);
+    const validSprites = Object.keys(pokemonData?.sprites ?? {}).filter(
+      (key) => {
+        const value = pokemonData?.sprites?.[key];
+        return typeof value === 'string' && value.trim() !== '';
+      }
+    );
+    setSprites(validSprites);
 
     if (validSprites.length > 0) {
       setSelectedSprite(validSprites[0]);
     }
-  }, [pokemonData]);
+  }, [pokemonData?.sprites]);
 
   const handleSpriteChange = (spriteKey) => {
     setSelectedSprite(spriteKey);
@@ -29,12 +31,12 @@ export const PokemonPage = ({ pokemonData }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{`Pokémon Details - ${formatText(pokemonData.name)}`}</title>
+        <title>{`Pokémon Details - ${formatText(pokemonData?.name ?? 'Unknown')}`}</title>
       </Head>
 
       <div className={styles.content}>
         <div className={styles.spriteButtons}>
-          {nonNullSprites.map((spriteKey) => (
+          {sprites.map((spriteKey) => (
             <button
               key={spriteKey}
               onClick={() => handleSpriteChange(spriteKey)}
@@ -46,25 +48,28 @@ export const PokemonPage = ({ pokemonData }) => {
         </div>
 
         <div className={styles.mainSection}>
-          <h1>{formatText(pokemonData.name)}</h1>
+          <h1>{formatText(pokemonData?.name ?? 'Unknown')}</h1>
           <div className={styles.imageSection}>
             {selectedSprite && (
               <Image
-                src={pokemonData.sprites[selectedSprite]}
-                alt={pokemonData.name}
+                src={
+                  pokemonData?.sprites?.[selectedSprite] ?? '/default-image.jpg'
+                }
+                alt={pokemonData?.name ?? 'Unknown'}
                 width={200}
                 height={200}
               />
             )}
           </div>
           <p>
-            <strong>Height:</strong> {pokemonData.height}
+            <strong>Height:</strong> {pokemonData?.height ?? 'Unknown'}
           </p>
           <p>
-            <strong>Weight:</strong> {pokemonData.weight}
+            <strong>Weight:</strong> {pokemonData?.weight ?? 'Unknown'}
           </p>
           <p>
-            <strong>Type:</strong> {pokemonData.types[0].type.name}
+            <strong>Type:</strong>{' '}
+            {pokemonData?.types?.[0]?.type?.name ?? 'Unknown'}
           </p>
         </div>
 
@@ -72,25 +77,32 @@ export const PokemonPage = ({ pokemonData }) => {
           <div className={styles.movesSection}>
             <h2>Moves</h2>
             <ul>
-              {pokemonData.moves.slice(0, 10).map((move) => (
-                <li key={move.move.name}>
-                  {formatText(move.move.name.replace('-', ' '))}
-                </li>
-              ))}
+              {pokemonData?.moves
+                ?.slice(0, 10)
+                .map((move) => (
+                  <li key={move?.move?.name}>
+                    {formatText(
+                      move?.move?.name.replace('-', ' ') ?? 'Unknown'
+                    )}
+                  </li>
+                )) ?? <li>Unknown</li>}
             </ul>
           </div>
 
           <div className={styles.statsSection}>
             <h2>Stats</h2>
             <ul>
-              {pokemonData.stats.slice(0, 10).map((stat) => (
-                <li key={stat.stat.name}>
+              {pokemonData?.stats?.slice(0, 10).map((stat) => (
+                <li key={stat?.stat?.name}>
                   <strong>
-                    {formatText(stat.stat.name.replace('-', ' '))}:
+                    {formatText(
+                      stat?.stat?.name.replace('-', ' ') ?? 'Unknown'
+                    )}
+                    :
                   </strong>{' '}
-                  {stat.base_stat}
+                  {stat?.base_stat ?? 'Unknown'}
                 </li>
-              ))}
+              )) ?? <li>Unknown</li>}
             </ul>
           </div>
         </div>

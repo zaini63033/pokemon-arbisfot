@@ -14,23 +14,35 @@ export const SearchPage = () => {
   const [initialResults, setInitialResults] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      await fetchInitialResults(
-        setInitialResults,
-        setResults,
-        setIsLoading,
-        setError
-      );
+    const fetchInitialData = async () => {
+      setIsLoading(true);
+      setError('');
+      try {
+        const data = await fetchInitialResults();
+        setInitialResults(data);
+        setResults(data);
+      } catch (error) {
+        setError(error.message);
+      }
+      setIsLoading(false);
     };
 
-    fetchData();
+    fetchInitialData();
   }, []);
 
   const handleSearch = useCallback(
     debounce(async (searchTerm) => {
       if (searchTerm) {
         setResults([]);
-        await fetchShows(searchTerm, setResults, setIsLoading, setError);
+        setIsLoading(true);
+        setError('');
+        try {
+          const data = await fetchShows(searchTerm);
+          setResults(data);
+        } catch (error) {
+          setError(error.message);
+        }
+        setIsLoading(false);
       } else {
         setResults(initialResults);
       }
