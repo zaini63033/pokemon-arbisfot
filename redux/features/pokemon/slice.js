@@ -6,8 +6,8 @@ const pokemonSlice = createSlice({
   initialState: {
     list: [],
     hasMore: true,
-    isLoading: false,
-    error: null,
+    isLoading: true,
+    error: '',
   },
   reducers: {
     setPokemonList: (state, { payload }) => {

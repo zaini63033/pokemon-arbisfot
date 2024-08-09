@@ -20,7 +20,7 @@ export const HomePage = ({ initialPokemonDetails }) => {
   const isLoading = useSelector(getIsLoading);
 
   useEffect(() => {
-    if (initialPokemonDetails.length > 0) {
+    if (initialPokemonDetails.length) {
       dispatch(setPokemonList(initialPokemonDetails));
     }
   }, []);

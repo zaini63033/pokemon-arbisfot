@@ -10,5 +10,4 @@ const store = configureStore({
 
 export default store;
 
-// use app dispatch
 export const useAppDispatch = useDispatch.withTypes();
