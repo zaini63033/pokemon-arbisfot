@@ -1,34 +1,34 @@
 'use client';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
-import { fetchPokemons } from '@/api/fetch-pokemons';
 import styles from './home.module.css';
 import { PokemonItem } from './pokemon-item/pokemon-item';
+import { fetchPokemonsThunk } from '@/redux/features/pokemon/service';
+import {
+  getPokemon,
+  getHasMore,
+  getIsLoading,
+} from '@/redux/features/pokemon/selector';
+import { setPokemonList } from '@/redux/features/pokemon/slice';
+import { useAppDispatch } from '@/redux/store';
 
 export const HomePage = ({ initialPokemonDetails }) => {
-  const limit = 10;
-  const [pokemon, setPokemon] = useState(initialPokemonDetails ?? []);
-  const [hasMore, setHasMore] = useState(true);
-  const [offset, setOffset] = useState(initialPokemonDetails?.length ?? 0);
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const pokemon = useSelector(getPokemon);
+  const hasMore = useSelector(getHasMore);
+  const isLoading = useSelector(getIsLoading);
+
+  useEffect(() => {
+    if (!pokemon.length) {
+      dispatch(setPokemonList(initialPokemonDetails));
+    }
+  }, []);
 
   const loadMore = async () => {
     if (isLoading) return;
 
-    setIsLoading(true);
-
-    try {
-      const newPokemon = await fetchPokemons({ limit, offset });
-      setPokemon((prevPokemon) => [...prevPokemon, ...(newPokemon ?? [])]);
-      setOffset(offset + limit);
-    } catch (error) {
-      console.error(error);
-    }
-    setIsLoading(false);
-
-    if (offset >= 100000) {
-      setHasMore(false);
-    }
+    dispatch(fetchPokemonsThunk({ offset: pokemon.length, limit: 10 }));
   };
 
   return (
@@ -42,11 +42,15 @@ export const HomePage = ({ initialPokemonDetails }) => {
       >
         <div className={styles['pokemon-container']}>
           {pokemon.map((p) => (
-            <PokemonItem key={p?.id ?? 'unknown'} pokemon={p} />
+            <PokemonItem key={p?.id} pokemon={p} />
           ))}
         </div>
       </InfiniteScroll>
-      {isLoading && <div>Loading more Pokémon...</div>}
+      {isLoading && (
+        <div className={styles['loading-container']}>
+          <div className={styles['loading-text']}>Loading more Pokémon...</div>
+        </div>
+      )}
     </div>
   );
 };
