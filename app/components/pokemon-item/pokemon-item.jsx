@@ -6,6 +6,14 @@ import Link from 'next/link';
 export const PokemonItem = ({ pokemon }) => {
   const [isFrontImage, setIsFrontImage] = useState(true);
 
+  const setFront = () => {
+    setIsFrontImage(true);
+  };
+
+  const setBack = () => {
+    setIsFrontImage(false);
+  };
+
   return (
     <div className={styles['pokemon-item']}>
       <Link href={`/${pokemon?.name}`}>
@@ -23,8 +31,8 @@ export const PokemonItem = ({ pokemon }) => {
         <p>{pokemon?.name}</p>
       </div>
       <div className={styles['button-container']}>
-        <button onClick={() => setIsFrontImage(true)}>Front</button>
-        <button onClick={() => setIsFrontImage(false)}>Back</button>
+        <button onClick={setFront}>Front</button>
+        <button onClick={setBack}>Back</button>
       </div>
     </div>
   );

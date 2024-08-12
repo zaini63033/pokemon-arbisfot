@@ -46,7 +46,7 @@ export const SearchPage = () => {
       } else {
         setResults(initialResults);
       }
-    }, 1000),
+    }, 300),
     [initialResults]
   );
 
@@ -73,12 +73,12 @@ export const SearchPage = () => {
       {error && <p className={styles.error}>{error}</p>}
       <div className={styles.results}>
         {results.map((result) => (
-          <div key={result?.show?.id ?? 'unknown'} className={styles.showCard}>
+          <div key={result?.show?.id ?? result?.id} className={styles.showCard}>
             {result?.show?.image?.medium || result?.image?.medium ? (
               <div className={styles.imageWrapper}>
                 <Image
                   src={result?.show?.image?.medium ?? result?.image?.medium}
-                  alt={result?.show?.name ?? result?.name ?? 'No name'}
+                  alt={result?.show?.name ?? result?.name ?? 'Not found'}
                   layout="responsive"
                   width={300}
                   height={420}
