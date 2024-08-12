@@ -31,8 +31,8 @@ export const PokemonItem = ({ pokemon }) => {
         <p>{pokemon?.name}</p>
       </div>
       <div className={styles['button-container']}>
-        <button onClick={() => setFront()}>Front</button>
-        <button onClick={() => setBack()}>Back</button>
+        <button onClick={setFront}>Front</button>
+        <button onClick={setBack}>Back</button>
       </div>
     </div>
   );
