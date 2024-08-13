@@ -5,28 +5,29 @@ import Image from 'next/image';
 import Head from 'next/head';
 import styles from './pokemon.module.css';
 import { formatText } from '@/utils/format-text';
+import { useSelector } from 'react-redux';
+import { getPokemonDetails } from '@/redux/features/pokemon/selector';
+import { useAppDispatch } from '@/redux/store';
+import { fetchPokemonDataThunk } from '@/redux/features/pokemon/service';
 
-export const PokemonPage = ({ pokemonData }) => {
+export const PokemonPage = ({ name }) => {
+  const dispatch = useAppDispatch();
+  const pokemonData = useSelector(getPokemonDetails(name));
   const [selectedSprite, setSelectedSprite] = useState('');
-  const [sprites, setSprites] = useState([]);
 
   useEffect(() => {
-    const validSprites = Object.keys(pokemonData?.sprites ?? {}).filter(
-      (key) => {
-        const value = pokemonData?.sprites?.[key];
-        return typeof value === 'string' && value.trim() !== '';
-      }
-    );
-    setSprites(validSprites);
+    dispatch(fetchPokemonDataThunk({ name }));
+  }, []);
 
-    if (validSprites.length > 0) {
-      setSelectedSprite(validSprites[0]);
-    }
+  useEffect(() => {
+    setSelectedSprite(Object.keys(pokemonData?.sprites ?? {})[0]);
   }, [pokemonData?.sprites]);
 
   const handleSpriteChange = (spriteKey) => {
     setSelectedSprite(spriteKey);
   };
+
+  if (!pokemonData) return null;
 
   return (
     <div className={styles.container}>
@@ -36,7 +37,7 @@ export const PokemonPage = ({ pokemonData }) => {
 
       <div className={styles.content}>
         <div className={styles.spriteButtons}>
-          {sprites.map((spriteKey) => (
+          {Object.keys(pokemonData.sprites).map((spriteKey) => (
             <button
               key={spriteKey}
               onClick={() => handleSpriteChange(spriteKey)}

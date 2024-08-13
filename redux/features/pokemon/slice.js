@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchPokemonsThunk, SLICE_NAME } from './service';
+import {
+  fetchPokemonsThunk,
+  fetchPokemonDataThunk,
+  SLICE_NAME,
+} from './service';
 
 const pokemonSlice = createSlice({
   name: SLICE_NAME,
@@ -8,6 +12,7 @@ const pokemonSlice = createSlice({
     hasMore: true,
     isLoading: true,
     error: '',
+    details: {},
   },
   reducers: {
     setPokemonList: (state, { payload }) => {
@@ -15,22 +20,35 @@ const pokemonSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchPokemonsThunk.pending, (state) => {
+    builder.addCase(fetchPokemonsThunk.pending, (state) => {
+      state.isLoading = true;
+      state.error = '';
+    });
+    builder.addCase(fetchPokemonsThunk.fulfilled, (state, { payload }) => {
+      state.list = [...state.list, ...payload];
+      state.isLoading = false;
+
+      if (state.list.length >= 100000) {
+        state.hasMore = false;
+      }
+    }),
+      builder.addCase(fetchPokemonsThunk.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload || 'Failed to fetch Pokémons';
+      }),
+      builder.addCase(fetchPokemonDataThunk.pending, (state) => {
         state.isLoading = true;
         state.error = '';
-      })
-      .addCase(fetchPokemonsThunk.fulfilled, (state, { payload }) => {
-        state.list = [...state.list, ...payload];
-        state.isLoading = false;
-
-        if (state.list.length >= 100000) {
-          state.hasMore = false;
+      }),
+      builder.addCase(
+        fetchPokemonDataThunk.fulfilled,
+        (state, { payload, meta: { arg } }) => {
+          state.details[arg.name] = payload;
         }
-      })
-      .addCase(fetchPokemonsThunk.rejected, (state, { payload }) => {
+      ),
+      builder.addCase(fetchPokemonDataThunk.rejected, (state, { payload }) => {
         state.isLoading = false;
-        state.error = payload || 'Failed to fetch Pokémon';
+        state.error = payload || 'Failed to fetch Pokémon data';
       });
   },
 });
