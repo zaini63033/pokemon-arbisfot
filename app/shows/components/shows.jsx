@@ -74,27 +74,19 @@ export const SearchPage = () => {
       <div className={styles.results}>
         {results.map((result) => (
           <div key={result?.show?.id ?? result?.id} className={styles.showCard}>
-            {result?.show?.image?.medium || result?.image?.medium ? (
-              <div className={styles.imageWrapper}>
-                <Image
-                  src={result?.show?.image?.medium ?? result?.image?.medium}
-                  alt={result?.show?.name ?? result?.name ?? 'Not found'}
-                  layout="responsive"
-                  width={300}
-                  height={420}
-                />
-              </div>
-            ) : (
-              <div className={styles.imageWrapper}>
-                <Image
-                  src="/default-image.jpg"
-                  alt="Default image"
-                  layout="responsive"
-                  width={300}
-                  height={420}
-                />
-              </div>
-            )}
+            <div className={styles.imageWrapper}>
+              <Image
+                src={
+                  result?.show?.image?.medium ??
+                  result?.image?.medium ??
+                  '/default-image.jpg'
+                }
+                alt={result?.show?.name ?? result?.name ?? 'Default image'}
+                layout="responsive"
+                width={300}
+                height={420}
+              />
+            </div>
             <div className={styles.showDetails}>
               <h2>{result?.show?.name ?? result?.name ?? 'No name'}</h2>
               <p>

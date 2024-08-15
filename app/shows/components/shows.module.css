@@ -58,23 +58,31 @@
 }
 
 .showCard {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #ccc;
   border-radius: 5px;
   overflow: hidden;
   width: 300px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
 }
 
 .imageWrapper {
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  padding-bottom: 0%;
-  min-height: 550px;
+  background-color: #e0e0e0;
+  flex-grow: 1; 
 }
 
 .showDetails {
   padding: 10px;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .showDetails h2 {

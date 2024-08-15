@@ -1,31 +1,80 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
 import styles from './pokemon.module.css';
 import { formatText } from '@/utils/format-text';
 import { useSelector } from 'react-redux';
-import { getPokemonDetails } from '@/redux/features/pokemon/selector';
+import {
+  getPokemonDetails,
+  getIsLoading,
+} from '@/redux/features/pokemon/selector';
 import { useAppDispatch } from '@/redux/store';
 import { fetchPokemonDataThunk } from '@/redux/features/pokemon/service';
 
 export const PokemonPage = ({ name }) => {
   const dispatch = useAppDispatch();
   const pokemonData = useSelector(getPokemonDetails(name));
+  const isLoading = useSelector(getIsLoading);
   const [selectedSprite, setSelectedSprite] = useState('');
+
+  const spriteKeys = useMemo(
+    () => Object.keys(pokemonData?.sprites ?? {}),
+    [pokemonData?.sprites]
+  );
 
   useEffect(() => {
     dispatch(fetchPokemonDataThunk({ name }));
-  }, []);
+  }, [name, dispatch]);
 
   useEffect(() => {
-    setSelectedSprite(Object.keys(pokemonData?.sprites ?? {})[0]);
-  }, [pokemonData?.sprites]);
+    if (spriteKeys.length > 0) {
+      setSelectedSprite(spriteKeys[0]);
+    }
+  }, [spriteKeys]);
 
-  const handleSpriteChange = (spriteKey) => {
+  const handleSpriteChange = useCallback((spriteKey) => {
     setSelectedSprite(spriteKey);
-  };
+  }, []);
+
+  const changeSprite = useCallback(
+    (spriteKey) => () => {
+      handleSpriteChange(spriteKey);
+    },
+    [handleSpriteChange]
+  );
+
+  const movesList = useMemo(
+    () =>
+      pokemonData?.moves
+        ?.slice(0, 10)
+        .map((move) => (
+          <li key={move?.move?.name}>
+            {formatText(move?.move?.name.replace('-', ' '))}
+          </li>
+        )) ?? <li>Unknown</li>,
+    [pokemonData?.moves]
+  );
+
+  const statsList = useMemo(
+    () =>
+      pokemonData?.stats?.slice(0, 10).map((stat) => (
+        <li key={stat?.stat?.name}>
+          <strong>{formatText(stat?.stat?.name.replace('-', ' '))}:</strong>{' '}
+          {stat?.base_stat}
+        </li>
+      )) ?? <li>Unknown</li>,
+    [pokemonData?.stats]
+  );
+
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
+  }
 
   if (!pokemonData) return null;
 
@@ -37,10 +86,10 @@ export const PokemonPage = ({ name }) => {
 
       <div className={styles.content}>
         <div className={styles.spriteButtons}>
-          {Object.keys(pokemonData.sprites).map((spriteKey) => (
+          {spriteKeys.map((spriteKey) => (
             <button
               key={spriteKey}
-              onClick={() => handleSpriteChange(spriteKey)}
+              onClick={changeSprite(spriteKey)}
               className={styles.spriteButton}
             >
               <strong>{formatText(spriteKey.replaceAll('_', ' '))}</strong>
@@ -74,29 +123,12 @@ export const PokemonPage = ({ name }) => {
         <div className={styles.sideSection}>
           <div className={styles.movesSection}>
             <h2>Moves</h2>
-            <ul>
-              {pokemonData?.moves
-                ?.slice(0, 10)
-                .map((move) => (
-                  <li key={move?.move?.name}>
-                    {formatText(move?.move?.name.replace('-', ' '))}
-                  </li>
-                )) ?? <li>Unknown</li>}
-            </ul>
+            <ul>{movesList}</ul>
           </div>
 
           <div className={styles.statsSection}>
             <h2>Stats</h2>
-            <ul>
-              {pokemonData?.stats?.slice(0, 10).map((stat) => (
-                <li key={stat?.stat?.name}>
-                  <strong>
-                    {formatText(stat?.stat?.name.replace('-', ' '))}:
-                  </strong>{' '}
-                  {stat?.base_stat}
-                </li>
-              )) ?? <li>Unknown</li>}
-            </ul>
+            <ul>{statsList}</ul>
           </div>
         </div>
       </div>

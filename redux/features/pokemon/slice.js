@@ -8,15 +8,15 @@ import {
 const pokemonSlice = createSlice({
   name: SLICE_NAME,
   initialState: {
-    list: [],
+    pokemonList: [],
     hasMore: true,
-    isLoading: true,
+    isLoading: false,
     error: '',
-    details: {},
+    pokemonsDetails: {},
   },
   reducers: {
     setPokemonList: (state, { payload }) => {
-      state.list = payload;
+      state.pokemonList = payload;
     },
   },
   extraReducers: (builder) => {
@@ -25,10 +25,10 @@ const pokemonSlice = createSlice({
       state.error = '';
     });
     builder.addCase(fetchPokemonsThunk.fulfilled, (state, { payload }) => {
-      state.list = [...state.list, ...payload];
+      state.pokemonList = [...state.pokemonList, ...payload];
       state.isLoading = false;
 
-      if (state.list.length >= 100000) {
+      if (state.pokemonList.length >= 100000) {
         state.hasMore = false;
       }
     }),
@@ -43,7 +43,8 @@ const pokemonSlice = createSlice({
       builder.addCase(
         fetchPokemonDataThunk.fulfilled,
         (state, { payload, meta: { arg } }) => {
-          state.details[arg.name] = payload;
+          state.pokemonsDetails[arg.name] = payload;
+          state.isLoading = false;
         }
       ),
       builder.addCase(fetchPokemonDataThunk.rejected, (state, { payload }) => {
