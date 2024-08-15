@@ -10,7 +10,8 @@ const pokemonSlice = createSlice({
   initialState: {
     pokemonList: [],
     hasMore: true,
-    isLoading: false,
+    isLoadingPokemonList: false,
+    isLoadingPokemonData: false,
     error: '',
     pokemonsDetails: {},
   },
@@ -21,34 +22,34 @@ const pokemonSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPokemonsThunk.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingPokemonList = true;
       state.error = '';
     });
     builder.addCase(fetchPokemonsThunk.fulfilled, (state, { payload }) => {
       state.pokemonList = [...state.pokemonList, ...payload];
-      state.isLoading = false;
+      state.isLoadingPokemonList = false;
 
       if (state.pokemonList.length >= 100000) {
         state.hasMore = false;
       }
     }),
       builder.addCase(fetchPokemonsThunk.rejected, (state, { payload }) => {
-        state.isLoading = false;
+        state.isLoadingPokemonList = false;
         state.error = payload || 'Failed to fetch Pokémons';
       }),
       builder.addCase(fetchPokemonDataThunk.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingPokemonData = true;
         state.error = '';
       }),
       builder.addCase(
         fetchPokemonDataThunk.fulfilled,
         (state, { payload, meta: { arg } }) => {
           state.pokemonsDetails[arg.name] = payload;
-          state.isLoading = false;
+          state.isLoadingPokemonData = false;
         }
       ),
       builder.addCase(fetchPokemonDataThunk.rejected, (state, { payload }) => {
-        state.isLoading = false;
+        state.isLoadingPokemonData = false;
         state.error = payload || 'Failed to fetch Pokémon data';
       });
   },

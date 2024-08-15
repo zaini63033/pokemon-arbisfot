@@ -26,7 +26,7 @@ export const PokemonPage = ({ name }) => {
 
   useEffect(() => {
     dispatch(fetchPokemonDataThunk({ name }));
-  }, [name, dispatch]);
+  }, []);
 
   useEffect(() => {
     if (spriteKeys.length > 0) {
@@ -46,25 +46,31 @@ export const PokemonPage = ({ name }) => {
   );
 
   const movesList = useMemo(
-    () =>
-      pokemonData?.moves
-        ?.slice(0, 10)
-        .map((move) => (
-          <li key={move?.move?.name}>
-            {formatText(move?.move?.name.replace('-', ' '))}
-          </li>
-        )) ?? <li>Unknown</li>,
+    () => (
+      <ul>
+        {pokemonData?.moves
+          ?.slice(0, 10)
+          .map((move) => (
+            <li key={move?.move?.name}>
+              {formatText(move?.move?.name.replace('-', ' '))}
+            </li>
+          )) ?? <li>Unknown</li>}
+      </ul>
+    ),
     [pokemonData?.moves]
   );
 
   const statsList = useMemo(
-    () =>
-      pokemonData?.stats?.slice(0, 10).map((stat) => (
-        <li key={stat?.stat?.name}>
-          <strong>{formatText(stat?.stat?.name.replace('-', ' '))}:</strong>{' '}
-          {stat?.base_stat}
-        </li>
-      )) ?? <li>Unknown</li>,
+    () => (
+      <ul>
+        {pokemonData?.stats?.slice(0, 10).map((stat) => (
+          <li key={stat?.stat?.name}>
+            <strong>{formatText(stat?.stat?.name.replace('-', ' '))}:</strong>{' '}
+            {stat?.base_stat}
+          </li>
+        )) ?? <li>Unknown</li>}
+      </ul>
+    ),
     [pokemonData?.stats]
   );
 
@@ -123,12 +129,12 @@ export const PokemonPage = ({ name }) => {
         <div className={styles.sideSection}>
           <div className={styles.movesSection}>
             <h2>Moves</h2>
-            <ul>{movesList}</ul>
+            {movesList}
           </div>
 
           <div className={styles.statsSection}>
             <h2>Stats</h2>
-            <ul>{statsList}</ul>
+            {statsList}
           </div>
         </div>
       </div>
