@@ -1,32 +1,88 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
 import styles from './pokemon.module.css';
 import { formatText } from '@/utils/format-text';
+import { useSelector } from 'react-redux';
+import {
+  getPokemonDetails,
+  getIsLoadingPokemonData,
+} from '@/redux/features/pokemon/selector';
+import { useAppDispatch } from '@/redux/store';
+import { fetchPokemonDataThunk } from '@/redux/features/pokemon/service';
 
-export const PokemonPage = ({ pokemonData }) => {
+export const PokemonPage = ({ name }) => {
+  const dispatch = useAppDispatch();
+  const pokemonData = useSelector(getPokemonDetails(name));
+  const isLoading = useSelector(getIsLoadingPokemonData);
   const [selectedSprite, setSelectedSprite] = useState('');
-  const [sprites, setSprites] = useState([]);
+
+  const spriteKeys = useMemo(
+    () => Object.keys(pokemonData?.sprites ?? {}),
+    [pokemonData?.sprites]
+  );
 
   useEffect(() => {
-    const validSprites = Object.keys(pokemonData?.sprites ?? {}).filter(
-      (key) => {
-        const value = pokemonData?.sprites?.[key];
-        return typeof value === 'string' && value.trim() !== '';
-      }
-    );
-    setSprites(validSprites);
+    dispatch(fetchPokemonDataThunk({ name }));
+  }, []);
 
-    if (validSprites.length > 0) {
-      setSelectedSprite(validSprites[0]);
+  useEffect(() => {
+    if (spriteKeys.length > 0) {
+      setSelectedSprite(spriteKeys[0]);
     }
-  }, [pokemonData?.sprites]);
+  }, [spriteKeys]);
 
-  const handleSpriteChange = (spriteKey) => {
+  const handleSpriteChange = useCallback((spriteKey) => {
     setSelectedSprite(spriteKey);
-  };
+  }, []);
+
+  const changeSprite = useCallback(
+    (spriteKey) => () => {
+      handleSpriteChange(spriteKey);
+    },
+    [handleSpriteChange]
+  );
+
+  const movesList = useMemo(
+    () => (
+      <ul>
+        {pokemonData?.moves
+          ?.slice(0, 10)
+          .map((move) => (
+            <li key={move?.move?.name}>
+              {formatText(move?.move?.name.replace('-', ' '))}
+            </li>
+          )) ?? <li>Unknown</li>}
+      </ul>
+    ),
+    [pokemonData?.moves]
+  );
+
+  const statsList = useMemo(
+    () => (
+      <ul>
+        {pokemonData?.stats?.slice(0, 10).map((stat) => (
+          <li key={stat?.stat?.name}>
+            <strong>{formatText(stat?.stat?.name.replace('-', ' '))}:</strong>{' '}
+            {stat?.base_stat}
+          </li>
+        )) ?? <li>Unknown</li>}
+      </ul>
+    ),
+    [pokemonData?.stats]
+  );
+
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
+  }
+
+  if (!pokemonData) return null;
 
   return (
     <div className={styles.container}>
@@ -36,10 +92,10 @@ export const PokemonPage = ({ pokemonData }) => {
 
       <div className={styles.content}>
         <div className={styles.spriteButtons}>
-          {sprites.map((spriteKey) => (
+          {spriteKeys.map((spriteKey) => (
             <button
               key={spriteKey}
-              onClick={() => handleSpriteChange(spriteKey)}
+              onClick={changeSprite(spriteKey)}
               className={styles.spriteButton}
             >
               <strong>{formatText(spriteKey.replaceAll('_', ' '))}</strong>
@@ -73,29 +129,12 @@ export const PokemonPage = ({ pokemonData }) => {
         <div className={styles.sideSection}>
           <div className={styles.movesSection}>
             <h2>Moves</h2>
-            <ul>
-              {pokemonData?.moves
-                ?.slice(0, 10)
-                .map((move) => (
-                  <li key={move?.move?.name}>
-                    {formatText(move?.move?.name.replace('-', ' '))}
-                  </li>
-                )) ?? <li>Unknown</li>}
-            </ul>
+            {movesList}
           </div>
 
           <div className={styles.statsSection}>
             <h2>Stats</h2>
-            <ul>
-              {pokemonData?.stats?.slice(0, 10).map((stat) => (
-                <li key={stat?.stat?.name}>
-                  <strong>
-                    {formatText(stat?.stat?.name.replace('-', ' '))}:
-                  </strong>{' '}
-                  {stat?.base_stat}
-                </li>
-              )) ?? <li>Unknown</li>}
-            </ul>
+            {statsList}
           </div>
         </div>
       </div>

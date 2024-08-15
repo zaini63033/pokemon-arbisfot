@@ -12,5 +12,5 @@ export default async function Page({ params }) {
   const data = await fetchPokemonData({ name: params.pokemonName });
   if (!data) return notFound();
 
-  return <PokemonPage pokemonData={data} />;
+  return <PokemonPage name={params.pokemonName} />;
 }
