@@ -8,7 +8,7 @@ import { fetchPokemonsThunk } from '@/redux/features/pokemon/service';
 import {
   getPokemon,
   getHasMore,
-  getIsLoading,
+  getIsLoadingPokemonList,
 } from '@/redux/features/pokemon/selector';
 import { setPokemonList } from '@/redux/features/pokemon/slice';
 import { useAppDispatch } from '@/redux/store';
@@ -17,7 +17,7 @@ export const HomePage = ({ initialPokemonDetails }) => {
   const dispatch = useAppDispatch();
   const pokemon = useSelector(getPokemon);
   const hasMore = useSelector(getHasMore);
-  const isLoading = useSelector(getIsLoading);
+  const isLoading = useSelector(getIsLoadingPokemonList);
 
   useEffect(() => {
     if (!pokemon.length) {

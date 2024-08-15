@@ -8,7 +8,7 @@ import { formatText } from '@/utils/format-text';
 import { useSelector } from 'react-redux';
 import {
   getPokemonDetails,
-  getIsLoading,
+  getIsLoadingPokemonData,
 } from '@/redux/features/pokemon/selector';
 import { useAppDispatch } from '@/redux/store';
 import { fetchPokemonDataThunk } from '@/redux/features/pokemon/service';
@@ -16,7 +16,7 @@ import { fetchPokemonDataThunk } from '@/redux/features/pokemon/service';
 export const PokemonPage = ({ name }) => {
   const dispatch = useAppDispatch();
   const pokemonData = useSelector(getPokemonDetails(name));
-  const isLoading = useSelector(getIsLoading);
+  const isLoading = useSelector(getIsLoadingPokemonData);
   const [selectedSprite, setSelectedSprite] = useState('');
 
   const spriteKeys = useMemo(
